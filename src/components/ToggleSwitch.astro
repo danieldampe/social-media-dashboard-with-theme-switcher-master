@@ -1,0 +1,12 @@
+<label class="inline-flex items-center cursor-pointer [&>div]:hover:bg-dark-theme-toggle">
+  <input class="hidden" type="checkbox" id="theme-switcher">
+  <div class="flex justify-end w-12 py-0.5 px-1 rounded-xl bg-primary-light-theme-toggle before:inline-block before:[--w:1.25rem] before:size-[var(--w)] before:rounded-full before:bg-white before:transition-all dark:before:mr-[calc(100%-var(--w))] dark:bg-dark-theme-toggle dark:before:bg-neutral-dark-theme-dark-desaturated-blue-card-bg"></div>
+</label>
+
+<script>
+  const $html = document.querySelector('html')
+  const $input = document.getElementById('theme-switcher')
+  if ($input instanceof HTMLInputElement && $html instanceof HTMLHtmlElement) {
+    $input.addEventListener('input', () => $html.classList.toggle('dark')) 
+  }
+</script>

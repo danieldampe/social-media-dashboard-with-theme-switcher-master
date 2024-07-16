@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets'
+import iconDown from '../assets/images/icon-down.svg'
+import iconUp from '../assets/images/icon-up.svg'
+
+interface Props {
+  altText: string
+  num: number
+}
+
+const { altText, num } = Astro.props
+const isPositive = num > 0
+const absoluteValue = Math.abs(num)
+
+---
+
+<div class="flex items-center gap-x-1 font-semibold text-xs">
+  <Image  
+    src={isPositive ? iconUp :  iconDown} 
+    alt={isPositive ? 'Icon Up' : 'Icon Down'} 
+  />
+  <div class={isPositive ? 'text-primary-lime-green' : 'text-primary-bright-red'}>
+    {absoluteValue} {altText}
+  </div>
+</div>

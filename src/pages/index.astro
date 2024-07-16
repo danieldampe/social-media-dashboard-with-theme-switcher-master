@@ -1,0 +1,58 @@
+---
+import data from "../assets/data.json";
+import type { SocialMediaStatistics } from "../types";
+import Layout from "../layouts/Layout.astro";
+import FollowersCard from "../components/FollowersCard.astro";
+import OverviewCard from "../components/OverviewCard.astro";
+import ToggleSwitch from "../components/ToggleSwitch.astro";
+
+const socialMediaData: SocialMediaStatistics[] = data
+const totalFollowers = socialMediaData.reduce((acc, current) => acc + current.followers.total, 0)
+const formattedTotalFollowers = totalFollowers.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+---
+
+<Layout title="Frontend Mentor | Social media dashboard with theme switcher">
+  <div class="w-full pt-8 pb-20 px-6 bg-neutral-light-theme-white-bg dark:bg-neutral-dark-theme-very-dark-blue-bg">
+    <div class="flex flex-col gap-y-12 w-full max-w-[1108px] mx-auto">
+      <section>
+        <header class="mb-10 font-bold text-sm text-neutral-light-theme-dark-grayish-blue-text md:flex md:justify-between">
+          <div>
+            <h1 class="mb-1 text-2xl text-neutral-light-theme-very-dark-blue-text md:text-[1.725rem] dark:text-white">Social Media Dashboard</h1>
+            <span class="dark:text-neutral-dark-theme-desaturated-blue-text">Total Followers: {formattedTotalFollowers}</span>
+          </div>
+          <div class="w-full h-px mt-6 mb-4 bg-neutral-light-theme-dark-grayish-blue-text md:hidden" />
+          <div class="flex justify-between items-center md:gap-x-3">
+            <span>Dark mode</span>
+            <ToggleSwitch />
+          </div>
+        </header>
+        <section class="flex flex-col gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          {socialMediaData.map(({ socialMedia, username, followers }) => {
+            return (
+              <FollowersCard 
+                socialMedia={socialMedia}
+                username={username} 
+                followers={followers} 
+              />
+            )
+          })}
+        </section>
+      </section>
+      <section>
+        <header class="mb-7">
+          <h2 class="font-bold text-2xl text-neutral-light-theme-dark-grayish-blue-text dark:text-white">Overview - Today</h2>
+        </header>
+        <section class="flex flex-col gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-6">
+          {socialMediaData.map(({ socialMedia, overview: overviewArr }) => {
+            return overviewArr.map((overview) => (
+              <OverviewCard 
+                socialMedia={socialMedia}
+                { ...overview }
+              />
+            ))
+          })}
+        </section>
+      </section>
+    </div>
+  </div>
+</Layout>

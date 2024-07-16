@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets'
+import type { SocialMediaStatistics } from "../types"
+import Indicator from './Indicator.astro'
+
+type Props = Pick<SocialMediaStatistics, 'username' | 'followers' | 'socialMedia'>
+
+const { socialMedia, username, followers } = Astro.props
+
+const colorVariants = {
+  facebook: 'before:bg-primary-facebook',
+  twitter: 'before:bg-primary-twitter',
+  instagram: 'before:bg-primary-instagram',
+  youtube: 'before:bg-primary-youtube',
+}
+
+const imagePath = '/src/assets/images/' + socialMedia.icon
+const altText = `${socialMedia.name} icon`
+const formattedUsername = socialMedia.name !== 'YouTube' ? '@' + username : username
+const formattedFollowersTotal = followers.total.toString().length >= 5 ? followers.total.toString().slice(0, 2) + 'k' : followers.total
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/*.{jpeg,jpg,png,gif,svg}')
+if (!images[imagePath]) throw new Error(`"${imagePath}" does not exist in glob: "/src/assets/images/*.{jpeg,jpg,png,gif}"`)
+---
+
+<article class={`relative flex flex-col items-center gap-y-6 pt-8 pb-5 rounded-md bg-neutral-light-theme-light-grayish-blue-card-bg overflow-hidden cursor-pointer transition-all hover:scale-105 hover:bg-[#e1e4f0] before:absolute before:top-0 before:left-0 before:block before:w-full before:h-1 ${colorVariants[socialMedia.color as keyof typeof colorVariants]} dark:bg-neutral-dark-theme-dark-desaturated-blue-card-bg dark:hover:bg-[#333a56]`}>
+  <header class="flex items-center gap-x-2">
+    <Image 
+      src={images[imagePath]()} 
+      alt={altText} 
+    />
+    <h4 class="font-semibold text-xs text-neutral-light-theme-dark-grayish-blue-text dark:text-neutral-dark-theme-desaturated-blue-text">{formattedUsername}</h4>
+  </header>
+  <div class="text-center">
+    <div class="mb-1.5 font-bold text-6xl dark:text-white">
+      {formattedFollowersTotal}
+    </div>
+    <div class="text-xs uppercase tracking-[.3em] text-neutral-light-theme-dark-grayish-blue-text dark:text-neutral-dark-theme-desaturated-blue-text">
+      {followers.parameter}
+    </div>
+  </div>
+  <footer>
+    <Indicator num={followers.today} altText='Today' />
+  </footer>
+</article>
